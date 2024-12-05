@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'; 
 import { StyleSheet, Text, TouchableOpacity, ImageBackground } from 'react-native';
 
 export default function Menu({ navigation }) {
@@ -17,7 +17,10 @@ export default function Menu({ navigation }) {
         <Text style={styles.menuText}>Registrarse</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.menuButton}>
+      <TouchableOpacity 
+        style={styles.menuButton}
+        onPress={() => navigation.navigate('Login')} 
+      >
         <Text style={styles.menuText}>Iniciar Sesión</Text>
       </TouchableOpacity>
     </ImageBackground>

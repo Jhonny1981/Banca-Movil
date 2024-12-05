@@ -3,6 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Menu from './components/Menu';
 import Register from './components/Register';
+import Login from './components/Login';
 
 const Stack = createNativeStackNavigator();
 
@@ -30,6 +31,17 @@ export default function App() {
             headerTitleStyle: { color: '#fff' },
             headerTintColor: '#fff',
             detachPreviousScreen: true, 
+          }}
+        />
+        <Stack.Screen 
+          name="Login" 
+          component={Login} 
+          options={{
+          title: 'Iniciar Sesión',
+          headerTransparent: true,
+          headerStyle: { backgroundColor: 'rgba(0, 123, 255, 1)' },
+          headerTitleStyle: { color: '#fff' },
+          headerTintColor: '#fff',
           }}
         />
       </Stack.Navigator>
