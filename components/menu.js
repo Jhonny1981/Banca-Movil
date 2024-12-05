@@ -1,22 +1,24 @@
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, ImageBackground } from 'react-native';
 
-export default function Menu() {
+export default function Menu({ navigation }) {
   return (
-
     <ImageBackground 
       source={require('../assets/fondo.jpg')}  
-      style={styles.menuContainer} 
-      resizeMode="cover"  
+      style={styles.menuContainer}
+      resizeMode="cover"
     >
       <Text style={styles.title}>Banco Azteca</Text>
 
-      <TouchableOpacity style={styles.menuButton}>
-        <Text style={styles.menuText}>Iniciar Sesión</Text>
+      <TouchableOpacity 
+        style={styles.menuButton}
+        onPress={() => navigation.navigate('Register')} 
+      >
+        <Text style={styles.menuText}>Registrarse</Text>
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.menuButton}>
-        <Text style={styles.menuText}>Registrarse</Text>
+        <Text style={styles.menuText}>Iniciar Sesión</Text>
       </TouchableOpacity>
     </ImageBackground>
   );
