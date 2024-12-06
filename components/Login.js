@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, TextInput, TouchableOpacity, View, ImageBackground } from 'react-native';
 
-export default function Login() {
+export default function Login({ navigation }) { // Asegúrate de recibir `navigation` como prop
   const [correo, setCorreo] = useState('');
   const [contraseña, setContraseña] = useState('');
 
@@ -18,8 +18,9 @@ export default function Login() {
       console.log(data.message);
       if (response.ok) {
         alert('Inicio de sesión exitoso');
+        navigation.navigate('Inicio'); // Redirección a la pantalla 'Inicio'
       } else {
-        alert(data.message);  // Si el inicio de sesion es incorrecto lo hara saber
+        alert(data.message); // Mensaje en caso de error
       }
     } catch (error) {
       console.error('Error:', error);

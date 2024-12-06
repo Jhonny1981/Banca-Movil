@@ -4,6 +4,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Menu from './components/Menu';
 import Register from './components/Register';
 import Login from './components/Login';
+import Inicio from './components/Inicio';
 
 const Stack = createNativeStackNavigator();
 
@@ -44,6 +45,16 @@ export default function App() {
           headerTintColor: '#fff',
           }}
         />
+        <Stack.Screen 
+          name="Inicio" 
+          component={Inicio} 
+          options={{
+          title: 'Inicio',
+          headerStyle: { backgroundColor: '#007bff' },
+          headerTitleStyle: { color: '#fff' },
+          headerTintColor: '#fff',
+          }}
+/>
       </Stack.Navigator>
     </NavigationContainer>
   );
