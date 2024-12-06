@@ -7,16 +7,32 @@ export default function Register() {
   const [correo, setCorreo] = useState('');
   const [contraseña, setContraseña] = useState('');
 
-  const handleRegister = () => {
-   
-    console.log('Datos registrados:', { nombre, apellido, correo, contraseña });
+  const handleRegister = async () => {
+    try {
+      const response = await fetch('http://192.168.0.9:3000/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ nombre, apellido, email: correo, contraseña }),
+      });
+      const data = await response.json();
+      console.log(data.message);
+      if (response.ok) {
+        alert('Usuario registrado con éxito');
+      } else {
+        alert('Error al registrar el usuario');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
   };
 
   return (
-    <ImageBackground 
-      source={require('../assets/sesion1.jpg')}  
-      style={styles.background} 
-      resizeMode="cover"  
+    <ImageBackground
+      source={require('../assets/sesion1.jpg')}
+      style={styles.background}
+      resizeMode="cover"
     >
       <View style={styles.container}>
         <Text style={styles.title}>Registro</Text>
@@ -61,7 +77,7 @@ export default function Register() {
 
 const styles = StyleSheet.create({
   background: {
-    flex: 1,  
+    flex: 1,
     justifyContent: 'center',
   },
   container: {
@@ -70,7 +86,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 20,
     marginTop: 50,
-    backgroundColor: 'rgba(0, 0, 0, 0.4)',  
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
   },
   title: {
     fontSize: 24,

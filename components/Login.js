@@ -5,14 +5,31 @@ export default function Login() {
   const [correo, setCorreo] = useState('');
   const [contraseña, setContraseña] = useState('');
 
-  const handleLogin = () => {
-    console.log('Datos de inicio de sesión:', { correo, contraseña });
+  const handleLogin = async () => {
+    try {
+      const response = await fetch('http://192.168.0.9:3000/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: correo, contraseña }),
+      });
+      const data = await response.json();
+      console.log(data.message);
+      if (response.ok) {
+        alert('Inicio de sesión exitoso');
+      } else {
+        alert(data.message);  // Si el inicio de sesion es incorrecto lo hara saber
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
   };
 
   return (
-    <ImageBackground 
-      source={require('../assets/sesion1.jpg')}  
-      style={styles.background} 
+    <ImageBackground
+      source={require('../assets/sesion1.jpg')}
+      style={styles.background}
       resizeMode="cover"
     >
       <View style={styles.container}>
@@ -44,7 +61,7 @@ export default function Login() {
 
 const styles = StyleSheet.create({
   background: {
-    flex: 1,  
+    flex: 1,
     justifyContent: 'center',
   },
   container: {
@@ -53,7 +70,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 20,
     marginTop: 50,
-    backgroundColor: 'rgba(0, 0, 0, 0.4)',  
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
   },
   title: {
     fontSize: 24,
