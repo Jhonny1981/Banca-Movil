@@ -1,9 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, TextInput, TouchableOpacity, View, ImageBackground } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default function Login({ navigation }) { // Asegúrate de recibir `navigation` como prop
+export default function Login({ navigation }) {
   const [correo, setCorreo] = useState('');
   const [contraseña, setContraseña] = useState('');
+
+  // Cargar los datos guardados al iniciar la aplicación
+  useEffect(() => {
+    const cargarDatosGuardados = async () => {
+      try {
+        const correoGuardado = await AsyncStorage.getItem('correo');
+        const contraseñaGuardada = await AsyncStorage.getItem('contraseña');
+        if (correoGuardado) setCorreo(correoGuardado);
+        if (contraseñaGuardada) setContraseña(contraseñaGuardada);
+      } catch (error) {
+        console.error('Error al cargar los datos guardados:', error);
+      }
+    };
+    cargarDatosGuardados();
+  }, []);
 
   const handleLogin = async () => {
     try {
@@ -14,13 +30,18 @@ export default function Login({ navigation }) { // Asegúrate de recibir `naviga
         },
         body: JSON.stringify({ email: correo, contraseña }),
       });
+
       const data = await response.json();
-      console.log(data.message);
       if (response.ok) {
         alert('Inicio de sesión exitoso');
-        navigation.navigate('Inicio'); // Redirección a la pantalla 'Inicio'
+        
+        
+        await AsyncStorage.setItem('correo', correo);
+        await AsyncStorage.setItem('contraseña', contraseña);
+
+        navigation.navigate('Inicio');
       } else {
-        alert(data.message); // Mensaje en caso de error
+        alert(data.message || 'Error al iniciar sesión');
       }
     } catch (error) {
       console.error('Error:', error);
@@ -53,7 +74,7 @@ export default function Login({ navigation }) { // Asegúrate de recibir `naviga
         />
 
         <TouchableOpacity style={styles.button} onPress={handleLogin}>
-          <Text style={styles.buttonText}>Iniciar Sesión</Text>
+          <Text style={styles.buttonText}>Ingresar</Text>
         </TouchableOpacity>
       </View>
     </ImageBackground>
@@ -70,8 +91,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
-    marginTop: 50,
-    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
   },
   title: {
     fontSize: 24,
@@ -81,12 +101,13 @@ const styles = StyleSheet.create({
   },
   input: {
     width: '100%',
-    padding: 10,
-    marginBottom: 15,
+    padding: 15,
+    marginBottom: 20,
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 5,
     backgroundColor: '#fff',
+    fontSize: 18,
   },
   button: {
     padding: 15,
@@ -98,5 +119,6 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#fff',
     fontSize: 20,
+    fontWeight: 'bold',
   },
 });

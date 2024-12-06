@@ -3,15 +3,32 @@ import { StyleSheet, Text, TextInput, TouchableOpacity, View, ImageBackground } 
 
 export default function Inicio() {
   const [cantidad, setCantidad] = useState('');
+  const [saldo, setSaldo] = useState(0); 
 
-  const handleSaveAmount = () => {
-    if (cantidad.trim() === '' || isNaN(cantidad) || Number(cantidad) <= 0) {
-      alert('Por favor, ingresa una cantidad válida.');
+  const handleIngreso = () => {
+    const nuevaCantidad = parseFloat(cantidad);
+    if (isNaN(nuevaCantidad) || nuevaCantidad <= 0) {
+      alert('Por favor, ingresa una cantidad válida para ingresar.');
       return;
     }
+    setSaldo(saldo + nuevaCantidad);
+    alert(`Has ingresado $${nuevaCantidad}. Tu nuevo saldo es $${saldo + nuevaCantidad}.`);
+    setCantidad('');
+  };
 
-    alert(`Has ingresado $${cantidad} con éxito.`);
-    setCantidad(''); 
+  const handleRetiro = () => {
+    const nuevaCantidad = parseFloat(cantidad);
+    if (isNaN(nuevaCantidad) || nuevaCantidad <= 0) {
+      alert('Por favor, ingresa una cantidad válida para retirar.');
+      return;
+    }
+    if (nuevaCantidad > saldo) {
+      alert('Fondos insuficientes para realizar este retiro.');
+      return;
+    }
+    setSaldo(saldo - nuevaCantidad);
+    alert(`Has retirado $${nuevaCantidad}. Tu nuevo saldo es $${saldo - nuevaCantidad}.`);
+    setCantidad('');
   };
 
   return (
@@ -21,7 +38,7 @@ export default function Inicio() {
       resizeMode="cover"
     >
       <View style={styles.container}>
-        <Text style={styles.title}>Ingreso de Dinero</Text>
+        <Text style={styles.title}>Tu saldo: ${saldo.toFixed(2)}</Text>
 
         <TextInput
           style={styles.input}
@@ -31,56 +48,68 @@ export default function Inicio() {
           keyboardType="numeric"
         />
 
-        <TouchableOpacity style={styles.button} onPress={handleSaveAmount}>
-          <Text style={styles.buttonText}>Guardar Cantidad</Text>
-        </TouchableOpacity>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity style={styles.button} onPress={handleIngreso}>
+            <Text style={styles.buttonText}>Ingresar Dinero</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.button} onPress={handleRetiro}>
+            <Text style={styles.buttonText}>Retirar Dinero</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
-    background: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    container: {
-      width: '90%',
-      padding: 20,
-      backgroundColor: 'rgba(0, 0, 0, 0.6)',
-      borderRadius: 10,
-      justifyContent: 'center', 
-      alignItems: 'center', 
-    },
-    title: {
-      fontSize: 28,
-      color: '#fff',
-      marginBottom: 20,
-      fontWeight: 'bold',
-      textAlign: 'center',
-    },
-    input: {
-      width: '100%',
-      padding: 15,
-      marginBottom: 20,
-      borderWidth: 1,
-      borderColor: '#ccc',
-      borderRadius: 5,
-      backgroundColor: '#fff',
-      fontSize: 18,
-      textAlign: 'center',
-    },
-    button: {
-      padding: 15,
-      backgroundColor: '#007bff',
-      borderRadius: 5,
-      width: '100%',
-      alignItems: 'center',
-    },
-    buttonText: {
-      color: '#fff',
-      fontSize: 18,
-      fontWeight: 'bold',
-    },
-  });
+  background: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  container: {
+    width: '90%',
+    padding: 20,
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  title: {
+    fontSize: 24,
+    color: '#fff',
+    marginBottom: 20,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  input: {
+    width: '100%',
+    padding: 15,
+    marginBottom: 20,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    backgroundColor: '#fff',
+    fontSize: 18,
+    textAlign: 'center',
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+  },
+  button: {
+    flex: 1,
+    marginHorizontal: 5,
+    padding: 15,
+    backgroundColor: '#007bff',
+    borderRadius: 5,
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+});

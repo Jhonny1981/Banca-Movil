@@ -54,7 +54,7 @@ export default function App() {
           headerTitleStyle: { color: '#fff' },
           headerTintColor: '#fff',
           }}
-/>
+          />
       </Stack.Navigator>
     </NavigationContainer>
   );
