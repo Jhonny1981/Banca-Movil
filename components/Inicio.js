@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, TextInput, TouchableOpacity, View, ImageBackground } from 'react-native';
 
-export default function Inicio() {
+export default function Inicio({ navigation }) {
   const [cantidad, setCantidad] = useState('');
-  const [saldo, setSaldo] = useState(0); 
+  const [saldo, setSaldo] = useState(0);
 
   const handleIngreso = () => {
     const nuevaCantidad = parseFloat(cantidad);
@@ -31,6 +31,19 @@ export default function Inicio() {
     setCantidad('');
   };
 
+  const handleGenerarQR = () => {
+    const nuevaCantidad = parseFloat(cantidad);
+    if (nuevaCantidad <= 0 || isNaN(nuevaCantidad)) {
+      alert('Por favor ingresa una cantidad válida.');
+      return;
+    }
+    if (saldo >= nuevaCantidad) {
+      navigation.navigate('GenerarQR', { cantidad: nuevaCantidad }); 
+    } else {
+      alert('No tienes saldo suficiente para generar un código QR.');
+    }
+  };
+
   return (
     <ImageBackground
       source={require('../assets/fondo.jpg')}
@@ -55,6 +68,10 @@ export default function Inicio() {
 
           <TouchableOpacity style={styles.button} onPress={handleRetiro}>
             <Text style={styles.buttonText}>Retirar Dinero</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.button} onPress={handleGenerarQR}>
+            <Text style={styles.buttonText}>Generar Código QR</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -95,16 +112,16 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: 'column',
+    alignItems: 'center',
     width: '100%',
   },
   button: {
-    flex: 1,
-    marginHorizontal: 5,
+    marginBottom: 15,
     padding: 15,
     backgroundColor: '#007bff',
     borderRadius: 5,
+    width: '80%',
     alignItems: 'center',
   },
   buttonText: {

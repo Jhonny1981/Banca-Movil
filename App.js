@@ -5,6 +5,7 @@ import Menu from './components/Menu';
 import Register from './components/Register';
 import Login from './components/Login';
 import Inicio from './components/Inicio';
+import GenerarQR from './components/GenerarQR';  
 
 const Stack = createNativeStackNavigator();
 
@@ -38,25 +39,36 @@ export default function App() {
           name="Login" 
           component={Login} 
           options={{
-          title: 'Iniciar Sesión',
-          headerTransparent: true,
-          headerStyle: { backgroundColor: 'rgba(0, 123, 255, 1)' },
-          headerTitleStyle: { color: '#fff' },
-          headerTintColor: '#fff',
+            title: 'Iniciar Sesión',
+            headerTransparent: true,
+            headerStyle: { backgroundColor: 'rgba(0, 123, 255, 1)' },
+            headerTitleStyle: { color: '#fff' },
+            headerTintColor: '#fff',
           }}
         />
         <Stack.Screen 
           name="Inicio" 
           component={Inicio} 
           options={{
-          title: 'Inicio',
-          headerStyle: { backgroundColor: '#007bff' },
-          headerTitleStyle: { color: '#fff' },
-          headerTintColor: '#fff',
+            title: 'Inicio',
+            headerStyle: { backgroundColor: '#007bff' },
+            headerTitleStyle: { color: '#fff' },
+            headerTintColor: '#fff',
           }}
-          />
+        />
+        <Stack.Screen 
+          name="GenerarQR" 
+          component={GenerarQR}  
+          options={{
+            title: 'Generar Código QR',
+            headerStyle: { backgroundColor: '#007bff' },
+            headerTitleStyle: { color: '#fff' },
+            headerTintColor: '#fff',
+          }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
+
 
