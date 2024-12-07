@@ -6,7 +6,7 @@ export default function Login({ navigation }) {
   const [correo, setCorreo] = useState('');
   const [contraseña, setContraseña] = useState('');
 
-  // Cargar los datos guardados al iniciar la aplicación
+  
   useEffect(() => {
     const cargarDatosGuardados = async () => {
       try {

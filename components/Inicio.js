@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, TextInput, TouchableOpacity, View, ImageBackground } from 'react-native';
+import { StyleSheet, Text, TextInput, TouchableOpacity, View, ImageBackground, FlatList } from 'react-native';
 
 export default function Inicio({ navigation }) {
   const [cantidad, setCantidad] = useState('');
-  const [saldo, setSaldo] = useState(0);
+  const [efectivo, setEfectivo] = useState(0);
+  const [historial, setHistorial] = useState([]); 
 
   const handleIngreso = () => {
     const nuevaCantidad = parseFloat(cantidad);
@@ -11,8 +12,15 @@ export default function Inicio({ navigation }) {
       alert('Por favor, ingresa una cantidad válida para ingresar.');
       return;
     }
-    setSaldo(saldo + nuevaCantidad);
-    alert(`Has ingresado $${nuevaCantidad}. Tu nuevo saldo es $${saldo + nuevaCantidad}.`);
+    const nuevoEfectivo = efectivo + nuevaCantidad;
+    setEfectivo(nuevoEfectivo);
+
+    setHistorial(prevHistorial => [
+      ...prevHistorial,
+      { tipo: 'Ingreso', monto: nuevaCantidad }
+    ]);
+
+    alert(`Has ingresado $${nuevaCantidad}. Tu nuevo efectivo es $${nuevoEfectivo}.`);
     setCantidad('');
   };
 
@@ -22,12 +30,19 @@ export default function Inicio({ navigation }) {
       alert('Por favor, ingresa una cantidad válida para retirar.');
       return;
     }
-    if (nuevaCantidad > saldo) {
+    if (nuevaCantidad > efectivo) {
       alert('Fondos insuficientes para realizar este retiro.');
       return;
     }
-    setSaldo(saldo - nuevaCantidad);
-    alert(`Has retirado $${nuevaCantidad}. Tu nuevo saldo es $${saldo - nuevaCantidad}.`);
+    const nuevoEfectivo = efectivo - nuevaCantidad;
+    setEfectivo(nuevoEfectivo);
+
+    setHistorial(prevHistorial => [
+      ...prevHistorial,
+      { tipo: 'Retiro', monto: nuevaCantidad }
+    ]);
+
+    alert(`Has retirado $${nuevaCantidad}. Tu nuevo efectivo es $${nuevoEfectivo}.`);
     setCantidad('');
   };
 
@@ -37,12 +52,18 @@ export default function Inicio({ navigation }) {
       alert('Por favor ingresa una cantidad válida.');
       return;
     }
-    if (saldo >= nuevaCantidad) {
-      navigation.navigate('GenerarQR', { cantidad: nuevaCantidad }); 
+    if (efectivo >= nuevaCantidad) {
+      navigation.navigate('GenerarQR', { cantidad: nuevaCantidad });
     } else {
-      alert('No tienes saldo suficiente para generar un código QR.');
+      alert('No tienes efectivo suficiente para generar un código QR.');
     }
   };
+
+  const renderItem = ({ item }) => (
+    <View style={styles.transactionItem}>
+      <Text style={styles.transactionText}>{item.tipo} - ${item.monto.toFixed(2)}</Text>
+    </View>
+  );
 
   return (
     <ImageBackground
@@ -51,7 +72,7 @@ export default function Inicio({ navigation }) {
       resizeMode="cover"
     >
       <View style={styles.container}>
-        <Text style={styles.title}>Tu saldo: ${saldo.toFixed(2)}</Text>
+        <Text style={styles.title}>Tu efectivo: ${efectivo.toFixed(2)}</Text>
 
         <TextInput
           style={styles.input}
@@ -73,6 +94,15 @@ export default function Inicio({ navigation }) {
           <TouchableOpacity style={styles.button} onPress={handleGenerarQR}>
             <Text style={styles.buttonText}>Generar Código QR</Text>
           </TouchableOpacity>
+        </View>
+
+        <View style={styles.historialContainer}>
+          <Text style={styles.historialTitle}>Historial </Text>
+          <FlatList
+            data={historial}
+            renderItem={renderItem}
+            keyExtractor={(item, index) => index.toString()}
+          />
         </View>
       </View>
     </ImageBackground>
@@ -129,4 +159,28 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
+  historialContainer: {
+    marginTop: 30,
+    width: '100%',
+  },
+  historialTitle: {
+    fontSize: 20,
+    color: '#fff',
+    marginBottom: 10,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  transactionItem: {
+    marginBottom: 10,
+    padding: 10,
+    backgroundColor: '#fff',
+    borderRadius: 5,
+  },
+  transactionText: {
+    fontSize: 16,
+    color: '#333',
+  },
 });
+
+
+
