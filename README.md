@@ -11,3 +11,5 @@ Instalación
 
 Uso de la aplicacion:
 Su funcion principal es tanto ingresar como retirar dinero con un teclado aparte de que cuenta con una funcion incompleta qu solo genera un codigo QR, igualmente necesita su respectiva base de datos para registrarse e iniciar sesion.
+
+
