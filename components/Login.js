@@ -6,7 +6,6 @@ export default function Login({ navigation }) {
   const [correo, setCorreo] = useState('');
   const [contraseña, setContraseña] = useState('');
 
-  
   useEffect(() => {
     const cargarDatosGuardados = async () => {
       try {
@@ -34,10 +33,12 @@ export default function Login({ navigation }) {
       const data = await response.json();
       if (response.ok) {
         alert('Inicio de sesión exitoso');
-        
-        
         await AsyncStorage.setItem('correo', correo);
         await AsyncStorage.setItem('contraseña', contraseña);
+
+        const user = data.user;
+        await AsyncStorage.setItem('userId', user.id.toString());
+        await AsyncStorage.setItem('dinero', user.dinero.toString());
 
         navigation.navigate('Inicio');
       } else {
@@ -49,11 +50,7 @@ export default function Login({ navigation }) {
   };
 
   return (
-    <ImageBackground
-      source={require('../assets/sesion1.jpg')}
-      style={styles.background}
-      resizeMode="cover"
-    >
+    <ImageBackground source={require('../assets/sesion1.jpg')} style={styles.background} resizeMode="cover">
       <View style={styles.container}>
         <Text style={styles.title}>Iniciar Sesión</Text>
 

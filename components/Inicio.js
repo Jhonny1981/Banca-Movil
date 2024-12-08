@@ -1,10 +1,51 @@
-import React, { useState } from 'react';
-import { StyleSheet, Text, TextInput, TouchableOpacity, View, ImageBackground, FlatList } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, Text, TextInput, TouchableOpacity, View, ImageBackground, FlatList} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Inicio({ navigation }) {
   const [cantidad, setCantidad] = useState('');
   const [efectivo, setEfectivo] = useState(0);
-  const [historial, setHistorial] = useState([]); 
+  const [historial, setHistorial] = useState([]);
+
+  useEffect(() => {
+    const cargarSaldo = async () => {
+      try {
+        const saldoGuardado = await AsyncStorage.getItem('dinero');
+        if (saldoGuardado) {
+          setEfectivo(parseFloat(saldoGuardado));
+        }
+      } catch (error) {
+        console.error('Error al cargar el saldo:', error);
+      }
+    };
+    cargarSaldo();
+  }, []);
+
+  const actualizarSaldo = async (nuevoSaldo) => {
+    try {
+      const userId = await AsyncStorage.getItem('userId');
+      if (userId) {
+        const response = await fetch('http://192.168.0.9:3000/actualizarSaldo', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ id: userId, dinero: nuevoSaldo }),
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+          await AsyncStorage.setItem('dinero', nuevoSaldo.toString());
+          setEfectivo(nuevoSaldo);
+          alert('Saldo actualizado correctamente en la base de datos');
+        } else {
+          alert(data.message || 'Error al actualizar el saldo');
+        }
+      }
+    } catch (error) {
+      console.error('Error al actualizar el saldo:', error);
+    }
+  };
 
   const handleIngreso = () => {
     const nuevaCantidad = parseFloat(cantidad);
@@ -13,14 +54,14 @@ export default function Inicio({ navigation }) {
       return;
     }
     const nuevoEfectivo = efectivo + nuevaCantidad;
-    setEfectivo(nuevoEfectivo);
+
+    actualizarSaldo(nuevoEfectivo);
 
     setHistorial(prevHistorial => [
       ...prevHistorial,
       { tipo: 'Ingreso', monto: nuevaCantidad }
     ]);
 
-    alert(`Has ingresado $${nuevaCantidad}. Tu nuevo efectivo es $${nuevoEfectivo}.`);
     setCantidad('');
   };
 
@@ -35,14 +76,14 @@ export default function Inicio({ navigation }) {
       return;
     }
     const nuevoEfectivo = efectivo - nuevaCantidad;
-    setEfectivo(nuevoEfectivo);
+
+    actualizarSaldo(nuevoEfectivo);
 
     setHistorial(prevHistorial => [
       ...prevHistorial,
       { tipo: 'Retiro', monto: nuevaCantidad }
     ]);
 
-    alert(`Has retirado $${nuevaCantidad}. Tu nuevo efectivo es $${nuevoEfectivo}.`);
     setCantidad('');
   };
 
@@ -102,6 +143,7 @@ export default function Inicio({ navigation }) {
             data={historial}
             renderItem={renderItem}
             keyExtractor={(item, index) => index.toString()}
+            contentContainerStyle={styles.flatListContainer}
           />
         </View>
       </View>
@@ -151,36 +193,37 @@ const styles = StyleSheet.create({
     padding: 15,
     backgroundColor: '#007bff',
     borderRadius: 5,
-    width: '80%',
+    width: '100%',
     alignItems: 'center',
   },
   buttonText: {
     color: '#fff',
-    fontSize: 16,
+    fontSize: 20,
     fontWeight: 'bold',
   },
   historialContainer: {
-    marginTop: 30,
+    marginTop: 20,
     width: '100%',
+    maxHeight: 200, 
+    overflow: 'hidden', 
   },
   historialTitle: {
-    fontSize: 20,
+    fontSize: 22,
     color: '#fff',
     marginBottom: 10,
-    fontWeight: 'bold',
     textAlign: 'center',
   },
   transactionItem: {
-    marginBottom: 10,
     padding: 10,
-    backgroundColor: '#fff',
+    marginBottom: 5,
+    backgroundColor: '#f8f8f8',
     borderRadius: 5,
   },
   transactionText: {
     fontSize: 16,
     color: '#333',
   },
+  flatListContainer: {
+    flexGrow: 1,
+  },
 });
-
-
-

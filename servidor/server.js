@@ -67,6 +67,22 @@ app.post('/login', (req, res) => {
   });
 });
 
+
+app.post('/actualizarSaldo', (req, res) => {
+  const { id, dinero } = req.body;
+
+  const query = 'UPDATE usuarios SET dinero = ? WHERE id = ?';
+  db.query(query, [dinero, id], (err, result) => {
+    if (err) {
+      return res.status(500).json({ message: 'Error al actualizar el saldo' });
+    }
+    res.status(200).json({ message: 'Saldo actualizado correctamente' });
+  });
+});
+
+
+
+
 app.listen(port, () => {
   console.log(`Servidor corriendo en http://localhost:${port}`);
 });
