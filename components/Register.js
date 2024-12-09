@@ -7,7 +7,17 @@ export default function Register() {
   const [correo, setCorreo] = useState('');
   const [contraseña, setContraseña] = useState('');
 
+  const isValidEmail = (email) => {
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/; 
+    return emailPattern.test(email);  
+  };
+
   const handleRegister = async () => {
+    if (!isValidEmail(correo)) {
+      alert('Por favor, ingrese un correo válido con un dominio (ej. ejemplo@dominio.com)');
+      return; 
+    }
+
     try {
       const response = await fetch('http://192.168.0.9:3000/register', {
         method: 'POST',
