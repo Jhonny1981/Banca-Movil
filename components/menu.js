@@ -8,7 +8,7 @@ export default function Menu({ navigation }) {
       style={styles.menuContainer}
       resizeMode="cover"
     >
-      <Text style={styles.title}>Banco Azteca</Text>
+      <Text style={styles.title}>PAPU Banco</Text>
 
       <TouchableOpacity 
         style={styles.menuButton}
@@ -27,7 +27,7 @@ export default function Menu({ navigation }) {
   );
 }
 
-// Asegura la pantalla
+
 const styles = StyleSheet.create({
   menuContainer: {
     flex: 1,  
@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
   menuButton: {
     padding: 15,  
     backgroundColor: '#007bff',
-    borderRadius: 5,
+    borderRadius: 50,
     marginBottom: 20,  
     width: '80%',  
     alignItems: 'center',  

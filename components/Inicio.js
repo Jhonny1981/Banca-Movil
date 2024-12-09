@@ -15,7 +15,7 @@ export default function Inicio({ navigation }) {
           setEfectivo(parseFloat(saldoGuardado));
         }
       } catch (error) {
-        console.error('Error al cargar el saldo:', error);
+        console.error('Error al cargar el efectivo:', error);
       }
     };
     cargarSaldo();
@@ -37,13 +37,13 @@ export default function Inicio({ navigation }) {
         if (response.ok) {
           await AsyncStorage.setItem('dinero', nuevoSaldo.toString());
           setEfectivo(nuevoSaldo);
-          alert('Saldo actualizado correctamente en la base de datos');
+          alert('Su movimiento fue procesado correctamente');
         } else {
-          alert(data.message || 'Error al actualizar el saldo');
+          alert(data.message || 'Error al procesar el pago');
         }
       }
     } catch (error) {
-      console.error('Error al actualizar el saldo:', error);
+      console.error('Error al actualizar el efectivo:', error);
     }
   };
 
@@ -100,6 +100,13 @@ export default function Inicio({ navigation }) {
     }
   };
 
+  const handleLogout = () => {
+    navigation.reset({
+      index: 0, 
+      routes: [{ name: 'Menu' }],
+    });
+  };
+
   const renderItem = ({ item }) => (
     <View style={styles.transactionItem}>
       <Text style={styles.transactionText}>{item.tipo} - ${item.monto.toFixed(2)}</Text>
@@ -113,7 +120,7 @@ export default function Inicio({ navigation }) {
       resizeMode="cover"
     >
       <View style={styles.container}>
-        <Text style={styles.title}>Tu efectivo: ${efectivo.toFixed(2)}</Text>
+        <Text style={styles.title}>Efectivo: ${efectivo.toFixed(2)}</Text>
 
         <TextInput
           style={styles.input}
@@ -134,6 +141,10 @@ export default function Inicio({ navigation }) {
 
           <TouchableOpacity style={styles.button} onPress={handleGenerarQR}>
             <Text style={styles.buttonText}>Generar Código QR</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.button} onPress={handleLogout}>
+            <Text style={styles.buttonText}>Volver al menu</Text>
           </TouchableOpacity>
         </View>
 
@@ -192,7 +203,7 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     padding: 15,
     backgroundColor: '#007bff',
-    borderRadius: 5,
+    borderRadius: 50,
     width: '100%',
     alignItems: 'center',
   },

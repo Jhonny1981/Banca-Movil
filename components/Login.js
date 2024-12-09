@@ -32,7 +32,6 @@ export default function Login({ navigation }) {
 
       const data = await response.json();
       if (response.ok) {
-        alert('Inicio de sesión exitoso');
         await AsyncStorage.setItem('correo', correo);
         await AsyncStorage.setItem('contraseña', contraseña);
 
@@ -50,7 +49,7 @@ export default function Login({ navigation }) {
   };
 
   return (
-    <ImageBackground source={require('../assets/sesion1.jpg')} style={styles.background} resizeMode="cover">
+    <ImageBackground source={require('../assets/p2.png')} style={styles.background} resizeMode="cover">
       <View style={styles.container}>
         <Text style={styles.title}>Iniciar Sesión</Text>
 
@@ -109,7 +108,7 @@ const styles = StyleSheet.create({
   button: {
     padding: 15,
     backgroundColor: '#007bff',
-    borderRadius: 5,
+    borderRadius: 50,
     width: '100%',
     alignItems: 'center',
   },

@@ -15,7 +15,8 @@ export default function App() {
       <Stack.Navigator 
         initialRouteName="Menu"
         screenOptions={{
-          animation: 'fade', 
+          animation: 'slide_from_bottom', 
+          detachPreviousScreen: true,
         }}
       >
         <Stack.Screen 
@@ -27,19 +28,18 @@ export default function App() {
           name="Register" 
           component={Register} 
           options={{
-            title: 'Registro',
+            title: 'Volver al menu',
             headerTransparent: true,
             headerStyle: { backgroundColor: 'rgba(0, 123, 255, 1)' },
             headerTitleStyle: { color: '#fff' },
-            headerTintColor: '#fff',
-            detachPreviousScreen: true, 
+            headerTintColor: '#fff', 
           }}
         />
         <Stack.Screen 
           name="Login" 
           component={Login} 
           options={{
-            title: 'Iniciar Sesión',
+            title: 'Volver al menu',
             headerTransparent: true,
             headerStyle: { backgroundColor: 'rgba(0, 123, 255, 1)' },
             headerTitleStyle: { color: '#fff' },

@@ -40,7 +40,7 @@ export default function Register() {
 
   return (
     <ImageBackground
-      source={require('../assets/sesion1.jpg')}
+      source={require('../assets/p2.png')}
       style={styles.background}
       resizeMode="cover"
     >
@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
   button: {
     padding: 15,
     backgroundColor: '#007bff',
-    borderRadius: 5,
+    borderRadius: 50,
     width: '100%',
     alignItems: 'center',
   },
