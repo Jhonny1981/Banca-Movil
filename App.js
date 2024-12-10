@@ -50,7 +50,7 @@ export default function App() {
           name="Inicio" 
           component={Inicio} 
           options={{
-            title: 'Inicio',
+            title: 'Volver al login',
             headerStyle: { backgroundColor: '#007bff' },
             headerTitleStyle: { color: '#fff' },
             headerTintColor: '#fff',

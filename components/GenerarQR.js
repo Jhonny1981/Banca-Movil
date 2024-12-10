@@ -10,12 +10,6 @@ export default function GenerarQR({ route, navigation }) {
       <View style={styles.container}>
         <Text style={styles.title}>Error</Text>
         <Text style={styles.errorText}>Cantidad no válida.</Text>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => navigation.goBack()}  
-        >
-          <Text style={styles.buttonText}>Volver al inicio</Text>
-        </TouchableOpacity>
       </View>
     );
   }
@@ -24,18 +18,10 @@ export default function GenerarQR({ route, navigation }) {
     <View style={styles.container}>
       <Text style={styles.title}>Escané el siguiente código:</Text>
       <Text style={styles.balance}>Cantidad a transferir: ${cantidad.toFixed(2)}</Text>
-
       <QRCode
         value={cantidad.toString()}  
         size={200}  
       />
-
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => navigation.goBack()}  
-      >
-        <Text style={styles.buttonText}>Volver al inicio</Text>
-      </TouchableOpacity>
     </View>
   );
 }
