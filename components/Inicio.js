@@ -33,7 +33,7 @@ export default function Inicio({ navigation }) {
     try {
       const userId = await AsyncStorage.getItem('userId');
       if (userId) {
-        const response = await fetch('http://192.168.0.9:3000/actualizarSaldo', {
+        const response = await fetch('http://192.168.0.9:3000/actualizarEfectivo', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
