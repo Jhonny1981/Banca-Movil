@@ -7,10 +7,12 @@ export default function Login({ navigation }) {
   const [contraseña, setContraseña] = useState('');
 
   useEffect(() => {
+    //Carga la contraseña y el correo
     const cargarDatosGuardados = async () => {
       try {
         const correoGuardado = await AsyncStorage.getItem('correo');
         const contraseñaGuardada = await AsyncStorage.getItem('contraseña');
+        //Actualiza los estados
         if (correoGuardado) setCorreo(correoGuardado);
         if (contraseñaGuardada) setContraseña(contraseñaGuardada);
       } catch (error) {
@@ -32,6 +34,7 @@ export default function Login({ navigation }) {
 
       const data = await response.json();
       if (response.ok) {
+        //Guarda los datos
         await AsyncStorage.setItem('correo', correo);
         await AsyncStorage.setItem('contraseña', contraseña);
 

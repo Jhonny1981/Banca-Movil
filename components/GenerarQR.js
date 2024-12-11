@@ -3,8 +3,9 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import QRCode from 'react-native-qrcode-svg';  
 
 export default function GenerarQR({ route, navigation }) {
-  const { cantidad } = route.params;  
+  const { cantidad } = route.params;  //Se extrae la cantidad puesta en la pantalla anterior
 
+  //verifica si la cantidad es valida
   if (isNaN(cantidad) || cantidad <= 0) {
     return (
       <View style={styles.container}>
@@ -14,6 +15,7 @@ export default function GenerarQR({ route, navigation }) {
     );
   }
 
+  //Si es valido devuelve el QR
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Escané el siguiente código:</Text>
@@ -49,18 +51,6 @@ const styles = StyleSheet.create({
     color: 'red',
     marginTop: 20,
     textAlign: 'center',
-  },
-  button: {
-    marginTop: 20,
-    padding: 15,
-    backgroundColor: '#007bff',
-    borderRadius: 5,
-    width: '80%',
-    alignItems: 'center',
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
   },
 });
 

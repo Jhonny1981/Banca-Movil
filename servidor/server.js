@@ -1,6 +1,6 @@
 const express = require('express');
-const mysql = require('mysql');
-const bodyParser = require('body-parser');
+const mysql = require('mysql');//Conecta a MySQL y realiza consultas
+const bodyParser = require('body-parser');//Para que las solicitudes utilizen formato JSON
 const { encryptPassword, verifyPassword } = require('./routes/encrypt');
 
 const app = express();
@@ -25,9 +25,11 @@ app.post('/register', async (req, res) => {
   const { nombre, apellido, email, contraseña } = req.body;
 
   try {
+    //Encripta la contraseña antes de guardarla
     const contraseñaEncriptada = await encryptPassword(contraseña);
-
+    //Consulta para ingresar usuarios
     const query = 'INSERT INTO usuarios (nombre, apellido, email, contraseña) VALUES (?, ?, ?, ?)';
+    //Se ejecuta la consulta
     db.query(query, [nombre, apellido, email, contraseñaEncriptada], (err, result) => {
       if (err) {
         console.error('Error al registrar el usuario:', err);
@@ -36,6 +38,7 @@ app.post('/register', async (req, res) => {
       res.status(200).json({ message: 'Usuario registrado correctamente' });
     });
   } catch (error) {
+    //Error durante la encriptacion
     console.error('Error en el proceso de registro:', error);
     res.status(500).json({ message: 'Error interno del servidor' });
   }
@@ -52,10 +55,12 @@ app.post('/login', (req, res) => {
       return res.status(500).json({ message: 'Error al intentar iniciar sesión' });
     }
 
+    //Error si no encientra el correo
     if (results.length === 0) {
       return res.status(404).json({ message: 'No se encuentra una cuenta con ese correo' });
     }
 
+    //Verifica si coinciden la contraseña ingresada con la encriptada
     const usuario = results[0];
     const contraseñaCorrecta = await verifyPassword(contraseña, usuario.contraseña);
 
@@ -68,15 +73,15 @@ app.post('/login', (req, res) => {
 });
 
 
-app.post('/actualizarSaldo', (req, res) => {
+app.post('/actualizarEfectivo', (req, res) => {
   const { id, dinero } = req.body;
 
   const query = 'UPDATE usuarios SET dinero = ? WHERE id = ?';
   db.query(query, [dinero, id], (err, result) => {
     if (err) {
-      return res.status(500).json({ message: 'Error al actualizar el saldo' });
+      return res.status(500).json({ message: 'Error al actualizar el Efectivo' });
     }
-    res.status(200).json({ message: 'Saldo actualizado correctamente' });
+    res.status(200).json({ message: 'Efectivo actualizado correctamente' });
   });
 });
 

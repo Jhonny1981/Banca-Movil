@@ -7,21 +7,29 @@ export default function Inicio({ navigation }) {
   const [efectivo, setEfectivo] = useState(0);
   const [historial, setHistorial] = useState([]);
 
+  //Carga el efectivo guardado 
   useEffect(() => {
-    const cargarSaldo = async () => {
+    const cargarEfectivo = async () => {
       try {
-        const saldoGuardado = await AsyncStorage.getItem('dinero');
-        if (saldoGuardado) {
-          setEfectivo(parseFloat(saldoGuardado));
+        const efectivoGuardado = await AsyncStorage.getItem('dinero');
+        if (efectivoGuardado) {
+          setEfectivo(parseFloat(efectivoGuardado));
         }
       } catch (error) {
         console.error('Error al cargar el efectivo:', error);
       }
     };
-    cargarSaldo();
+    cargarEfectivo();
   }, []);
 
-  const actualizarSaldo = async (nuevoSaldo) => {
+  //Nos da la fecha y hora del movimiento
+  const obtenerFecha = () => {
+    const fecha = new Date();
+    return `${fecha.toLocaleDateString()} ${fecha.toLocaleTimeString()}`;
+  };
+
+  //Actualiza el dinero en el server y en AsyncStorage
+  const actualizarEfectivo = async (nuevoEfectivo) => {
     try {
       const userId = await AsyncStorage.getItem('userId');
       if (userId) {
@@ -30,13 +38,13 @@ export default function Inicio({ navigation }) {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ id: userId, dinero: nuevoSaldo }),
+          body: JSON.stringify({ id: userId, dinero: nuevoEfectivo }),
         });
 
         const data = await response.json();
         if (response.ok) {
-          await AsyncStorage.setItem('dinero', nuevoSaldo.toString());
-          setEfectivo(nuevoSaldo);
+          await AsyncStorage.setItem('dinero', nuevoEfectivo.toString());
+          setEfectivo(nuevoEfectivo);
           alert('Su movimiento fue procesado correctamente');
         } else {
           alert(data.message || 'Error al procesar el pago');
@@ -48,21 +56,21 @@ export default function Inicio({ navigation }) {
   };
 
   const handleIngreso = () => {
-    const nuevaCantidad = parseFloat(cantidad);
+    const nuevaCantidad = parseFloat(cantidad);// Lo ingresado se convierte en un numero
     if (isNaN(nuevaCantidad) || nuevaCantidad <= 0) {
       alert('Por favor, ingresa una cantidad válida para ingresar.');
       return;
     }
     const nuevoEfectivo = efectivo + nuevaCantidad;
 
-    actualizarSaldo(nuevoEfectivo);
+    actualizarEfectivo(nuevoEfectivo);
 
     setHistorial(prevHistorial => [
       ...prevHistorial,
-      { tipo: 'Ingreso', monto: nuevaCantidad }
+      { tipo: 'Ingreso', monto: nuevaCantidad, fecha: obtenerFecha() }
     ]);
 
-    setCantidad('');
+    setCantidad(''); //Vacia el recuadro de la cantidad que ingresa el usuario
   };
 
   const handleRetiro = () => {
@@ -77,11 +85,11 @@ export default function Inicio({ navigation }) {
     }
     const nuevoEfectivo = efectivo - nuevaCantidad;
 
-    actualizarSaldo(nuevoEfectivo);
+    actualizarEfectivo(nuevoEfectivo);
 
     setHistorial(prevHistorial => [
       ...prevHistorial,
-      { tipo: 'Retiro', monto: nuevaCantidad }
+      { tipo: 'Retiro', monto: nuevaCantidad, fecha: obtenerFecha() }
     ]);
 
     setCantidad('');
@@ -109,7 +117,9 @@ export default function Inicio({ navigation }) {
 
   const renderItem = ({ item }) => (
     <View style={styles.transactionItem}>
-      <Text style={styles.transactionText}>{item.tipo} - ${item.monto.toFixed(2)}</Text>
+      <Text style={styles.transactionText}>
+        {item.tipo} - ${item.monto.toFixed(2)} - {item.fecha}
+      </Text>
     </View>
   );
 

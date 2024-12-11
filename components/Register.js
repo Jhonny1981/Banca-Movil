@@ -7,6 +7,7 @@ export default function Register() {
   const [correo, setCorreo] = useState('');
   const [contraseña, setContraseña] = useState('');
 
+  //Funcion para tener un correo valido con una expresion regular
   const isValidEmail = (email) => {
     const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/; 
     return emailPattern.test(email);  
