@@ -6,7 +6,9 @@ const { encryptPassword, verifyPassword } = require('./routes/encrypt');
 const app = express();
 const port = 3000;
 
+app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
+
 
 const db = mysql.createConnection({
   host: 'localhost',
@@ -46,9 +48,10 @@ app.post('/register', async (req, res) => {
 
 
 app.post('/login', (req, res) => {
-  const { email, contraseña } = req.body;
+  const { email, password } = req.body;
 
   const query = 'SELECT * FROM usuarios WHERE email = ?';
+  console.log(req.body);
   db.query(query, [email], async (err, results) => {
     if (err) {
       console.error('Error al intentar iniciar sesión:', err);
@@ -57,12 +60,14 @@ app.post('/login', (req, res) => {
 
     //Error si no encientra el correo
     if (results.length === 0) {
-      return res.status(404).json({ message: 'No se encuentra una cuenta con ese correo' });
+      return res.status(404).json({ message: 'No se encuentra una cuenta con ese correo?' });
     }
 
     //Verifica si coinciden la contraseña ingresada con la encriptada
     const usuario = results[0];
-    const contraseñaCorrecta = await verifyPassword(contraseña, usuario.contraseña);
+    console.log(password, usuario["contraseña"]);
+    const contraseñaCorrecta = await verifyPassword(password, usuario["contraseña"]);
+
 
     if (!contraseñaCorrecta) {
       return res.status(401).json({ message: 'Contraseña incorrecta' });
@@ -75,11 +80,11 @@ app.post('/login', (req, res) => {
 
 app.post('/actualizarEfectivo', (req, res) => {
   const { id, dinero } = req.body;
-
-  const query = 'UPDATE usuarios SET dinero = ? WHERE id = ?';
+  console.log(req.body);
+  const query = 'UPDATE usuarios SET dinero = dinero - ? WHERE id = ?';
   db.query(query, [dinero, id], (err, result) => {
     if (err) {
-      return res.status(500).json({ message: 'Error al actualizar el Efectivo' });
+      return res.status(500).json({ message: 'Error al actualizar el Efectivo: '+err });
     }
     res.status(200).json({ message: 'Efectivo actualizado correctamente' });
   });
